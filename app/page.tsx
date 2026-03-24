@@ -58,18 +58,18 @@ export default async function HomePage() {
               {/* Badge */}
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
                 <Sparkles className="w-4 h-4" />
-                <span>NajvĂ¤ÄŤĹˇĂ­ online ĹˇariĹˇskĂ˝ slovnĂ­k</span>
+                <span>Najväčší online šarišský slovník</span>
               </div>
 
               {/* Main headline */}
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-4 leading-tight text-balance">
-                Objavte krĂˇsu{' '}
-                <span className="text-primary">ĹˇariĹˇtiny</span>
+                Objavte krásu{' '}
+                <span className="text-primary">šarištiny</span>
               </h1>
 
               <p className="text-lg sm:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto text-pretty">
-                PreloĹľte slovenskĂ© slovĂˇ do ĹˇariĹˇskĂ©ho nĂˇreÄŤia a zachovajte
-                unikĂˇtny dialekt vĂ˝chodnĂ©ho Slovenska.
+                Preložte slovenské slová do šarišského nárečia a zachovajte unikátny
+                dialekt východného Slovenska.
               </p>
 
               {/* Search Box */}
@@ -83,11 +83,11 @@ export default async function HomePage() {
                 </div>
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Languages className="w-5 h-5 text-accent" />
-                  <span className="text-sm">SlovenÄŤina â†’ Ĺ ariĹˇtina</span>
+                  <span className="text-sm">Slovenčina → Šariština</span>
                 </div>
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Users className="w-5 h-5 text-primary" />
-                  <span className="text-sm">Komunita nadĹˇencov</span>
+                  <span className="text-sm">Komunita nadšencov</span>
                 </div>
               </div>
             </div>
@@ -113,23 +113,23 @@ export default async function HomePage() {
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-8 text-center">
-                O ĹˇariĹˇskom nĂˇreÄŤĂ­
+                O šarišskom nárečí
               </h2>
 
               <div className="grid sm:grid-cols-2 gap-6">
                 <div className="bg-card rounded-2xl p-6 border border-border">
-                  <h3 className="font-bold text-lg mb-2 text-foreground">Kde sa hovorĂ­?</h3>
+                  <h3 className="font-bold text-lg mb-2 text-foreground">Kde sa hovorí?</h3>
                   <p className="text-muted-foreground">
-                    Ĺ ariĹˇtina sa pouĹľĂ­va prevaĹľne v regiĂłne Ĺ ariĹˇ na vĂ˝chodnom Slovensku,
-                    v okolĂ­ miest ako PreĹˇov, Bardejov ÄŤi Sabinov.
+                    Šariština sa používa prevažne v regióne Šariš na východnom Slovensku,
+                    v okolí miest ako Prešov, Bardejov či Sabinov.
                   </p>
                 </div>
 
                 <div className="bg-card rounded-2xl p-6 border border-border">
-                  <h3 className="font-bold text-lg mb-2 text-foreground">UnikĂˇtne znaky</h3>
+                  <h3 className="font-bold text-lg mb-2 text-foreground">Unikátne znaky</h3>
                   <p className="text-muted-foreground">
-                    Ĺ ariĹˇtina mĂˇ vlastnĂ© fonetickĂ© pravidlĂˇ, slovnĂş zĂˇsobu a gramatiku,
-                    ktorĂ© ju odliĹˇujĂş od spisovnej slovenÄŤiny.
+                    Šariština má vlastné fonetické pravidlá, slovnú zásobu a gramatiku,
+                    ktoré ju odlišujú od spisovnej slovenčiny.
                   </p>
                 </div>
               </div>
@@ -153,7 +153,7 @@ function RandomWordBanner({ words }: { words: WordWithViews[] }) {
       href={`/slovo/${randomWord.url}`}
       className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-primary-foreground hover:opacity-90 transition-opacity"
     >
-      <span className="text-sm font-medium opacity-80">Slovo dĹa:</span>
+      <span className="text-sm font-medium opacity-80">Slovo dňa:</span>
       <span className="text-xl sm:text-2xl font-bold">{randomWord.slovenske}</span>
       <span className="hidden sm:inline text-lg opacity-80">=</span>
       <span className="text-lg sm:text-xl font-medium opacity-90">{randomWord.sariske[0]}</span>
