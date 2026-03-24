@@ -10,9 +10,9 @@ interface TopWordsProps {
 
 const rankColors = [
   'from-yellow-400 to-amber-500', // 1st - gold
-  'from-gray-300 to-gray-400',    // 2nd - silver  
+  'from-gray-300 to-gray-400', // 2nd - silver
   'from-amber-600 to-orange-700', // 3rd - bronze
-  'from-primary/80 to-primary',   // 4th+
+  'from-primary/80 to-primary', // 4th+
 ]
 
 export function TopWords({ words }: TopWordsProps) {
@@ -46,9 +46,7 @@ export function TopWords({ words }: TopWordsProps) {
                 rankColors[Math.min(index, 3)]
               } flex items-center justify-center shadow-md`}
             >
-              <span className="text-white font-bold text-sm">
-                {index + 1}
-              </span>
+              <span className="text-white font-bold text-sm">{index + 1}</span>
             </div>
 
             <div className="ml-6">
@@ -57,7 +55,7 @@ export function TopWords({ words }: TopWordsProps) {
                 {word.slovenske}
               </h3>
 
-              {/* Šariš translations */}
+              {/* Saris translations */}
               <div className="flex flex-wrap gap-2 mt-2">
                 {word.sariske.slice(0, 3).map((s, i) => (
                   <span

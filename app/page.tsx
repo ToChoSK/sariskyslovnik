@@ -2,44 +2,12 @@ import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { SearchBox } from '@/components/search-box'
 import { TopWords } from '@/components/top-words'
-import { getRandomWords, getWordByUrl } from '@/lib/dictionary'
-import { getTopWordPaths, isCounterConfigured } from '@/lib/cloudflare-counter'
-import type { WordWithViews } from '@/lib/types'
+import { getTopWordsData } from '@/lib/top-words'
 import { BookOpen, Languages, Users, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 
-async function getTopWordsData(): Promise<WordWithViews[]> {
-  try {
-    if (isCounterConfigured()) {
-      const topWordUrls = await getTopWordPaths(10)
-      const words = topWordUrls
-        .map(({ url, views }) => {
-          const word = getWordByUrl(url)
-          if (!word) {
-            return null
-          }
-
-          return { ...word, views }
-        })
-        .filter((word): word is WordWithViews => Boolean(word))
-
-      if (words.length > 0) {
-        return words
-      }
-    }
-  } catch (error) {
-    console.error('Error fetching top words:', error)
-  }
-
-  const randomWords = getRandomWords(10)
-  return randomWords.map((word, index) => ({
-    ...word,
-    views: Math.floor(Math.random() * 500) + (10 - index) * 50,
-  }))
-}
-
 export default async function HomePage() {
-  const topWords = await getTopWordsData()
+  const { words: topWords } = await getTopWordsData(10)
 
   return (
     <div className="min-h-screen flex flex-col">
