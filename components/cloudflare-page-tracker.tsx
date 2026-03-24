@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { usePathname } from 'next/navigation'
-import { getPublicCounterBaseUrl, toTrackedPath } from '@/lib/cloudflare-counter'
+import { toTrackedPath } from '@/lib/cloudflare-counter'
 
 const RECENT_TRACKS_TTL_MS = 3000
 const recentTracks = new Map<string, number>()
@@ -11,8 +11,7 @@ export function CloudflarePageTracker() {
   const pathname = usePathname()
 
   useEffect(() => {
-    const baseUrl = getPublicCounterBaseUrl()
-    if (!baseUrl || !pathname) {
+    if (!pathname) {
       return
     }
 
@@ -26,22 +25,14 @@ export function CloudflarePageTracker() {
 
     recentTracks.set(path, now)
 
-    const payload = JSON.stringify({ path })
-    const endpoint = `${baseUrl}/track`
-    const blob = new Blob([payload], { type: 'application/json' })
-
-    if (navigator.sendBeacon) {
-      navigator.sendBeacon(endpoint, blob)
-      return
-    }
-
-    void fetch(endpoint, {
+    void fetch('/api/page-views', {
       method: 'POST',
-      body: payload,
+      body: JSON.stringify({ path }),
       headers: {
         'Content-Type': 'application/json',
       },
       keepalive: true,
+      cache: 'no-store',
     })
   }, [pathname])
 

@@ -87,6 +87,10 @@ export default async function WordPage({ params }: PageProps) {
 
                 {/* Translations */}
                 <div className="p-6 sm:p-8">
+                  <div className="mb-6">
+                    <ViewCounter wordUrl={slug} />
+                  </div>
+
                   <p className="text-muted-foreground text-sm font-medium mb-4">
                     Po šarišsky ({word.sariske.length} {word.sariske.length === 1 ? 'preklad' : word.sariske.length < 5 ? 'preklady' : 'prekladov'})
                   </p>
@@ -112,10 +116,6 @@ export default async function WordPage({ params }: PageProps) {
                     ))}
                   </div>
 
-                  {/* View Counter */}
-                  <div className="mt-6 pt-6 border-t border-border">
-                    <ViewCounter wordUrl={slug} />
-                  </div>
                 </div>
               </div>
 

@@ -25,6 +25,7 @@ function withCors(request, response, allowedOrigins) {
       allowedOrigins.includes("*") ? "*" : normalizedOrigin
     )
     headers.set("Vary", "Origin")
+    headers.set("Access-Control-Allow-Credentials", "true")
   }
 
   headers.set("Access-Control-Allow-Methods", "GET,POST,OPTIONS")

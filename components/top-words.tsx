@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { TrendingUp, Eye, Sparkles } from 'lucide-react'
 import type { WordWithViews } from '@/lib/types'
@@ -9,14 +10,51 @@ interface TopWordsProps {
 }
 
 const rankColors = [
-  'from-yellow-400 to-amber-500', // 1st - gold
-  'from-gray-300 to-gray-400', // 2nd - silver
-  'from-amber-600 to-orange-700', // 3rd - bronze
-  'from-primary/80 to-primary', // 4th+
+  'from-yellow-400 to-amber-500',
+  'from-gray-300 to-gray-400',
+  'from-amber-600 to-orange-700',
+  'from-primary/80 to-primary',
 ]
 
 export function TopWords({ words }: TopWordsProps) {
-  if (!words || words.length === 0) {
+  const [liveWords, setLiveWords] = useState(words)
+
+  useEffect(() => {
+    let active = true
+
+    async function loadTopWords() {
+      try {
+        const response = await fetch('/api/top-words?limit=10', { cache: 'no-store' })
+        if (!response.ok) {
+          console.error('[top-words/client] request failed', response.status)
+          return
+        }
+
+        const payload = (await response.json()) as {
+          words?: WordWithViews[]
+          source?: string
+        }
+        console.info('[top-words/client]', {
+          source: payload.source,
+          count: payload.words?.length ?? 0,
+          sampleUrls: payload.words?.slice(0, 3).map((word) => word.url) ?? [],
+        })
+        if (active && Array.isArray(payload.words) && payload.words.length > 0) {
+          setLiveWords(payload.words)
+        }
+      } catch (error) {
+        console.error('[top-words/client] request error', error)
+      }
+    }
+
+    void loadTopWords()
+
+    return () => {
+      active = false
+    }
+  }, [])
+
+  if (!liveWords || liveWords.length === 0) {
     return (
       <div className="text-center py-12">
         <Sparkles className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
@@ -33,48 +71,39 @@ export function TopWords({ words }: TopWordsProps) {
         <h2 className="text-2xl font-bold text-foreground">Najpopulárnejšie slová</h2>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        {words.map((word, index) => (
+      <div className="flex flex-wrap items-start gap-4">
+        {liveWords.map((word, index) => (
           <Link
             key={word.url}
             href={`/slovo/${word.url}`}
-            className="group relative block overflow-hidden rounded-2xl bg-card border-2 border-border p-5 transition-all duration-300 hover:border-primary hover:shadow-lg hover:-translate-y-1"
+            className="group relative block min-w-[18rem] max-w-full flex-1 basis-[18rem] overflow-hidden rounded-2xl bg-card border-2 border-border p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary hover:shadow-lg sm:min-w-0 sm:flex-none sm:basis-auto"
           >
-            {/* Rank badge */}
             <div
-              className={`absolute -top-1 -left-1 w-10 h-10 rounded-br-2xl bg-gradient-to-br ${
+              className={`absolute -top-1 -left-1 flex h-10 w-10 items-center justify-center rounded-br-2xl bg-gradient-to-br ${
                 rankColors[Math.min(index, 3)]
-              } flex items-center justify-center shadow-md`}
+              } shadow-md`}
             >
-              <span className="text-white font-bold text-sm">{index + 1}</span>
+              <span className="text-sm font-bold text-white">{index + 1}</span>
             </div>
 
             <div className="ml-6">
-              {/* Slovak word */}
-              <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+              <h3 className="text-xl font-bold text-foreground transition-colors group-hover:text-primary">
                 {word.slovenske}
               </h3>
 
-              {/* Saris translations */}
-              <div className="flex flex-wrap gap-2 mt-2">
-                {word.sariske.slice(0, 3).map((s, i) => (
+              <div className="mt-2 flex flex-wrap gap-2">
+                {word.sariske.map((s, i) => (
                   <span
                     key={i}
-                    className="inline-block px-3 py-1 bg-accent/15 text-accent rounded-full text-sm font-medium transition-colors group-hover:bg-accent/25"
+                    className="inline-block rounded-full bg-accent/15 px-3 py-1 text-sm font-medium text-accent transition-colors group-hover:bg-accent/25"
                   >
                     {s}
                   </span>
                 ))}
-                {word.sariske.length > 3 && (
-                  <span className="inline-block px-3 py-1 bg-muted text-muted-foreground rounded-full text-sm">
-                    +{word.sariske.length - 3}
-                  </span>
-                )}
               </div>
 
-              {/* View count */}
-              <div className="flex items-center gap-1 mt-3 text-muted-foreground text-sm">
-                <Eye className="w-4 h-4" />
+              <div className="mt-3 flex items-center gap-1 text-sm text-muted-foreground">
+                <Eye className="h-4 w-4" />
                 <span>{word.views.toLocaleString('sk-SK')} zobrazení</span>
               </div>
             </div>

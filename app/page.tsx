@@ -3,8 +3,12 @@ import { Footer } from '@/components/footer'
 import { SearchBox } from '@/components/search-box'
 import { TopWords } from '@/components/top-words'
 import { getTopWordsData } from '@/lib/top-words'
+import type { WordWithViews } from '@/lib/types'
 import { BookOpen, Languages, Users, Sparkles } from 'lucide-react'
 import Link from 'next/link'
+
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 export default async function HomePage() {
   const { words: topWords } = await getTopWordsData(10)
