@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Nunito } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { CloudflarePageTracker } from '@/components/cloudflare-page-tracker'
 import './globals.css'
 
 const nunito = Nunito({ 
@@ -53,6 +54,7 @@ export default function RootLayout({
   return (
     <html lang="sk">
       <body className={`${nunito.variable} font-sans antialiased min-h-screen`}>
+        <CloudflarePageTracker />
         {children}
         <Analytics />
       </body>

@@ -2,26 +2,35 @@ import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { SearchBox } from '@/components/search-box'
 import { TopWords } from '@/components/top-words'
-import { getRandomWords } from '@/lib/dictionary'
+import { getRandomWords, getWordByUrl } from '@/lib/dictionary'
+import { getTopWordPaths, isCounterConfigured } from '@/lib/cloudflare-counter'
 import type { WordWithViews } from '@/lib/types'
 import { BookOpen, Languages, Users, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 
 async function getTopWordsData(): Promise<WordWithViews[]> {
   try {
-    // In production, fetch from API
-    if (process.env.NODE_ENV === 'production' && process.env.VERCEL_URL) {
-      const res = await fetch(`https://${process.env.VERCEL_URL}/api/top-words?limit=10`, {
-        cache: 'no-store'
-      })
-      const data = await res.json()
-      return data.words || []
+    if (isCounterConfigured()) {
+      const topWordUrls = await getTopWordPaths(10)
+      const words = topWordUrls
+        .map(({ url, views }) => {
+          const word = getWordByUrl(url)
+          if (!word) {
+            return null
+          }
+
+          return { ...word, views }
+        })
+        .filter((word): word is WordWithViews => Boolean(word))
+
+      if (words.length > 0) {
+        return words
+      }
     }
   } catch (error) {
     console.error('Error fetching top words:', error)
   }
 
-  // Fallback: return random words with fake view counts for demo
   const randomWords = getRandomWords(10)
   return randomWords.map((word, index) => ({
     ...word,
@@ -49,18 +58,18 @@ export default async function HomePage() {
               {/* Badge */}
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
                 <Sparkles className="w-4 h-4" />
-                <span>Najväčší online šarišský slovník</span>
+                <span>NajvĂ¤ÄŤĹˇĂ­ online ĹˇariĹˇskĂ˝ slovnĂ­k</span>
               </div>
 
               {/* Main headline */}
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-4 leading-tight text-balance">
-                Objavte krásu{' '}
-                <span className="text-primary">šarištiny</span>
+                Objavte krĂˇsu{' '}
+                <span className="text-primary">ĹˇariĹˇtiny</span>
               </h1>
 
               <p className="text-lg sm:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto text-pretty">
-                Preložte slovenské slová do šarišského nárečia a zachovajte 
-                unikátny dialekt východného Slovenska.
+                PreloĹľte slovenskĂ© slovĂˇ do ĹˇariĹˇskĂ©ho nĂˇreÄŤia a zachovajte
+                unikĂˇtny dialekt vĂ˝chodnĂ©ho Slovenska.
               </p>
 
               {/* Search Box */}
@@ -74,11 +83,11 @@ export default async function HomePage() {
                 </div>
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Languages className="w-5 h-5 text-accent" />
-                  <span className="text-sm">Slovenčina → Šariština</span>
+                  <span className="text-sm">SlovenÄŤina â†’ Ĺ ariĹˇtina</span>
                 </div>
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Users className="w-5 h-5 text-primary" />
-                  <span className="text-sm">Komunita nadšencov</span>
+                  <span className="text-sm">Komunita nadĹˇencov</span>
                 </div>
               </div>
             </div>
@@ -104,23 +113,23 @@ export default async function HomePage() {
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-8 text-center">
-                O šarišskom nárečí
+                O ĹˇariĹˇskom nĂˇreÄŤĂ­
               </h2>
-              
+
               <div className="grid sm:grid-cols-2 gap-6">
                 <div className="bg-card rounded-2xl p-6 border border-border">
-                  <h3 className="font-bold text-lg mb-2 text-foreground">Kde sa hovorí?</h3>
+                  <h3 className="font-bold text-lg mb-2 text-foreground">Kde sa hovorĂ­?</h3>
                   <p className="text-muted-foreground">
-                    Šariština sa používa prevažne v regióne Šariš na východnom Slovensku, 
-                    v okolí miest ako Prešov, Bardejov či Sabinov.
+                    Ĺ ariĹˇtina sa pouĹľĂ­va prevaĹľne v regiĂłne Ĺ ariĹˇ na vĂ˝chodnom Slovensku,
+                    v okolĂ­ miest ako PreĹˇov, Bardejov ÄŤi Sabinov.
                   </p>
                 </div>
-                
+
                 <div className="bg-card rounded-2xl p-6 border border-border">
-                  <h3 className="font-bold text-lg mb-2 text-foreground">Unikátne znaky</h3>
+                  <h3 className="font-bold text-lg mb-2 text-foreground">UnikĂˇtne znaky</h3>
                   <p className="text-muted-foreground">
-                    Šariština má vlastné fonetické pravidlá, slovnú zásobu a gramatiku, 
-                    ktoré ju odlišujú od spisovnej slovenčiny.
+                    Ĺ ariĹˇtina mĂˇ vlastnĂ© fonetickĂ© pravidlĂˇ, slovnĂş zĂˇsobu a gramatiku,
+                    ktorĂ© ju odliĹˇujĂş od spisovnej slovenÄŤiny.
                   </p>
                 </div>
               </div>
@@ -136,15 +145,15 @@ export default async function HomePage() {
 
 function RandomWordBanner({ words }: { words: WordWithViews[] }) {
   if (!words || words.length === 0) return null
-  
+
   const randomWord = words[Math.floor(Math.random() * words.length)]
-  
+
   return (
-    <Link 
+    <Link
       href={`/slovo/${randomWord.url}`}
       className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-primary-foreground hover:opacity-90 transition-opacity"
     >
-      <span className="text-sm font-medium opacity-80">Slovo dňa:</span>
+      <span className="text-sm font-medium opacity-80">Slovo dĹa:</span>
       <span className="text-xl sm:text-2xl font-bold">{randomWord.slovenske}</span>
       <span className="hidden sm:inline text-lg opacity-80">=</span>
       <span className="text-lg sm:text-xl font-medium opacity-90">{randomWord.sariske[0]}</span>

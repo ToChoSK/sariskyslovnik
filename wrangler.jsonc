@@ -1,0 +1,24 @@
+{
+  "name": "sariskyslovnik-counter",
+  "main": "cloudflare/page-views-worker.mjs",
+  "compatibility_date": "2026-03-24",
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "PAGE_VIEW_COUNTER",
+        "class_name": "PageViewCounter"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": [
+        "PageViewCounter"
+      ]
+    }
+  ],
+  "vars": {
+    "ALLOWED_ORIGINS": "http://localhost:3000,https://sariskyslovnik.vercel.app"
+  }
+}

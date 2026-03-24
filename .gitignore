@@ -9,10 +9,12 @@ next.user-config.*
 
 # Environment variables
 .env*.local
+.dev.vars
 
 # Common ignores
 node_modules
 .next/
+.wrangler/
 .DS_Store
 
 /.idea/*

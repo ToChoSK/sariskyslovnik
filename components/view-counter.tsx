@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Eye } from 'lucide-react'
+import { getPageViewCount } from '@/lib/cloudflare-counter'
 
 interface ViewCounterProps {
   wordUrl: string
@@ -12,28 +13,18 @@ export function ViewCounter({ wordUrl }: ViewCounterProps) {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    async function incrementViews() {
+    async function loadViews() {
       try {
-        const response = await fetch('/api/increment-views', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ wordUrl }),
-        })
-
-        if (response.ok) {
-          const data = await response.json()
-          setViews(data.views)
+        const count = await getPageViewCount(`/slovo/${wordUrl}`)
+        if (typeof count === 'number') {
+          setViews(count)
         }
-      } catch (error) {
-        console.error('Error incrementing views:', error)
       } finally {
         setIsLoading(false)
       }
     }
 
-    incrementViews()
+    void loadViews()
   }, [wordUrl])
 
   return (
