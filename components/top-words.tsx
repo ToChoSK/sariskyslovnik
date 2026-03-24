@@ -26,7 +26,6 @@ export function TopWords({ words }: TopWordsProps) {
       try {
         const response = await fetch('/api/top-words?limit=10', { cache: 'no-store' })
         if (!response.ok) {
-          console.error('[top-words/client] request failed', response.status)
           return
         }
 
@@ -34,16 +33,11 @@ export function TopWords({ words }: TopWordsProps) {
           words?: WordWithViews[]
           source?: string
         }
-        console.info('[top-words/client]', {
-          source: payload.source,
-          count: payload.words?.length ?? 0,
-          sampleUrls: payload.words?.slice(0, 3).map((word) => word.url) ?? [],
-        })
         if (active && Array.isArray(payload.words) && payload.words.length > 0) {
           setLiveWords(payload.words)
         }
-      } catch (error) {
-        console.error('[top-words/client] request error', error)
+      } catch {
+        // Keep the server-rendered value as fallback.
       }
     }
 

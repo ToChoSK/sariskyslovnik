@@ -16,7 +16,6 @@ export async function getTopWordsData(limit = 10): Promise<{
   source: 'cloudflare-durable-object' | 'fallback'
 }> {
   if (!isCounterConfigured()) {
-    console.info('[top-words] fallback: counter is not configured')
     return {
       words: getFallbackTopWords(limit),
       source: 'fallback',
@@ -25,12 +24,10 @@ export async function getTopWordsData(limit = 10): Promise<{
 
   try {
     const topWordUrls = await getTopWordPaths(limit)
-    const missingUrls: string[] = []
     const words = topWordUrls
       .map(({ url, views }) => {
         const word = getWordByUrl(url)
         if (!word) {
-          missingUrls.push(url)
           return null
         }
 
@@ -39,28 +36,15 @@ export async function getTopWordsData(limit = 10): Promise<{
       .filter((word): word is WordWithViews => Boolean(word))
 
     if (words.length > 0) {
-      console.info('[top-words] cloudflare hit', {
-        requestedLimit: limit,
-        cloudflareCount: topWordUrls.length,
-        mappedCount: words.length,
-        missingUrls,
-      })
       return {
         words,
         source: 'cloudflare-durable-object',
       }
     }
-
-    console.info('[top-words] fallback: cloudflare returned no usable words', {
-      requestedLimit: limit,
-      cloudflareCount: topWordUrls.length,
-      missingUrls,
-    })
   } catch (error) {
     console.error('Error fetching top words:', error)
   }
 
-  console.info('[top-words] fallback: using generated words')
   return {
     words: getFallbackTopWords(limit),
     source: 'fallback',
