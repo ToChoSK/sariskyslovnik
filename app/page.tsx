@@ -40,7 +40,7 @@ export default async function HomePage() {
               </h1>
 
               <p className="text-lg sm:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto text-pretty">
-                Preložte slovenské slová do šarišského nárečia a zachovajte unikátny
+                Vyhľadajte preklad slovenských slov v šarišskom nárečí a spoznajte unikátny
                 dialekt východného Slovenska.
               </p>
 
