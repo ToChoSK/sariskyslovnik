@@ -1,11 +1,14 @@
 import type { MetadataRoute } from 'next'
 
+const SITE_URL = 'https://www.slovniksaris.eu'
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: 'https://www.slovniksaris.eu/sitemap.xml',
+    sitemap: `${SITE_URL}/sitemap.xml`,
+    host: SITE_URL,
   }
 }

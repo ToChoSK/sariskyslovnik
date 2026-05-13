@@ -11,6 +11,7 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.slovniksaris.eu'),
   title: 'Šarišský Slovník - Preklad slovenčiny do šarištiny',
   description: 'Najväčší online slovník slovensko-šarišského nárečia. Preložte slovenské slová do šarištiny a objavte krásu východoslovenského dialektu.',
   keywords: ['šariš', 'šariština', 'slovník', 'nárečie', 'slovenčina', 'východné slovensko', 'dialekt'],

@@ -1,23 +1,23 @@
-import { getDictionary } from '@/lib/dictionary'
 import type { MetadataRoute } from 'next'
+import { getDictionary } from '@/lib/dictionary'
+
+const SITE_URL = 'https://www.slovniksaris.eu'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const words = getDictionary()
-
-  const wordEntries = words.map((word) => ({
-    url: `https://www.slovniksaris.eu/slovo/${word.url}`,
-    lastModified: new Date(),
-    changeFrequency: 'monthly' as const,
-    priority: 0.8,
-  }))
+  const lastModified = new Date()
 
   return [
     {
-      url: 'https://www.slovniksaris.eu',
-      lastModified: new Date(),
+      url: SITE_URL,
+      lastModified,
       changeFrequency: 'weekly' as const,
       priority: 1,
     },
-    ...wordEntries,
+    ...getDictionary().map((entry) => ({
+      url: `${SITE_URL}/slovo/${entry.url}`,
+      lastModified,
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    })),
   ]
 }
