@@ -21,20 +21,25 @@ export const metadata: Metadata = {
     description: 'Preložte slovenské slová do šarištiny',
     type: 'website',
     locale: 'sk_SK',
+    images: [
+      {
+        url: '/logo.png',
+        width: 1254,
+        height: 1254,
+        alt: 'Šarišský Slovník',
+      },
+    ],
   },
   icons: {
     icon: [
       {
-        url: '/icon-48x48.png',
-        sizes: '48x48',
+        url: '/favicon100.png',
+        sizes: '100x100',
         type: 'image/png',
       },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
     ],
-    apple: '/apple-icon.png',
+    shortcut: '/favicon100.png',
+    apple: '/favicon.png',
   },
 }
 
