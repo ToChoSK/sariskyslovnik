@@ -7,7 +7,7 @@ export function GET(): Response {
   const entries = Array.from({ length: getSitemapCount() }, (_, id) => {
     return [
       '<sitemap>',
-      `<loc>${escapeXml(`${SITE_URL}/sitemaps/${id}`)}</loc>`,
+      `<loc>${escapeXml(`${SITE_URL}/sitemaps/${id}.xml`)}</loc>`,
       `<lastmod>${lastModified}</lastmod>`,
       '</sitemap>',
     ].join('')
