@@ -12,6 +12,37 @@ export function getSitemapWords(id: number) {
   return getDictionary().slice(start, start + WORDS_PER_SITEMAP)
 }
 
+export function createUrlsetSitemap(): string {
+  const lastModified = new Date().toISOString()
+  const homeEntry = [
+    '<url>',
+    `<loc>${escapeXml(SITE_URL)}</loc>`,
+    `<lastmod>${lastModified}</lastmod>`,
+    '<changefreq>weekly</changefreq>',
+    '<priority>1</priority>',
+    '</url>',
+  ].join('')
+
+  const wordEntries = getDictionary().map((entry) => {
+    return [
+      '<url>',
+      `<loc>${escapeXml(`${SITE_URL}/slovo/${entry.url}`)}</loc>`,
+      `<lastmod>${lastModified}</lastmod>`,
+      '<changefreq>monthly</changefreq>',
+      '<priority>0.8</priority>',
+      '</url>',
+    ].join('')
+  }).join('')
+
+  return [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    homeEntry,
+    wordEntries,
+    '</urlset>',
+  ].join('')
+}
+
 export function escapeXml(value: string): string {
   return value
     .replaceAll('&', '&amp;')
