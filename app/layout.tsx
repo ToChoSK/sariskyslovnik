@@ -56,6 +56,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="sk">
+      <head>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7058805435322327"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className={`${nunito.variable} font-sans antialiased min-h-screen`}>
         <CloudflarePageTracker />
         {children}
