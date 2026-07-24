@@ -7,6 +7,7 @@ import type { WordWithViews } from '@/lib/types'
 
 interface TopWordsProps {
   words: WordWithViews[]
+  source: 'cloudflare-durable-object' | 'fallback'
 }
 
 const rankColors = [
@@ -16,8 +17,9 @@ const rankColors = [
   'from-primary/80 to-primary',
 ]
 
-export function TopWords({ words }: TopWordsProps) {
+export function TopWords({ words, source }: TopWordsProps) {
   const [liveWords, setLiveWords] = useState(words)
+  const [liveSource, setLiveSource] = useState(source)
 
   useEffect(() => {
     let active = true
@@ -35,6 +37,7 @@ export function TopWords({ words }: TopWordsProps) {
         }
         if (active && Array.isArray(payload.words) && payload.words.length > 0) {
           setLiveWords(payload.words)
+          setLiveSource(payload.source === 'cloudflare-durable-object' ? payload.source : 'fallback')
         }
       } catch {
         // Keep the server-rendered value as fallback.
@@ -62,7 +65,11 @@ export function TopWords({ words }: TopWordsProps) {
     <div className="space-y-4">
       <div className="flex items-center gap-2 mb-6">
         <TrendingUp className="w-6 h-6 text-primary" />
-        <h2 className="text-2xl font-bold text-foreground">Najpopulárnejšie slová</h2>
+        <h2 className="text-2xl font-bold text-foreground">
+          {liveSource === 'cloudflare-durable-object'
+            ? 'Najčastejšie navštevované heslá'
+            : 'Heslá na objavovanie'}
+        </h2>
       </div>
 
       <div className="flex flex-wrap items-start gap-4">
@@ -96,10 +103,12 @@ export function TopWords({ words }: TopWordsProps) {
                 ))}
               </div>
 
-              <div className="mt-3 flex items-center gap-1 text-sm text-muted-foreground">
-                <Eye className="h-4 w-4" />
-                <span>{word.views.toLocaleString('sk-SK')} zobrazení</span>
-              </div>
+              {liveSource === 'cloudflare-durable-object' && (
+                <div className="mt-3 flex items-center gap-1 text-sm text-muted-foreground">
+                  <Eye className="h-4 w-4" />
+                  <span>{word.views.toLocaleString('sk-SK')} zobrazení</span>
+                </div>
+              )}
             </div>
           </Link>
         ))}

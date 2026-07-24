@@ -20,7 +20,7 @@ export function Header() {
           </div>
         </Link>
 
-        <nav className="hidden sm:flex items-center gap-6">
+        <nav aria-label="Hlavná navigácia" className="hidden sm:flex items-center gap-6">
           <Link 
             href="/" 
             className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
@@ -31,7 +31,19 @@ export function Header() {
             href="/#popular" 
             className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
-            Populárne
+            Heslá
+          </Link>
+          <Link
+            href="/sarisske-narecie"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            O nárečí
+          </Link>
+          <Link
+            href="/o-slovniku"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            O slovníku
           </Link>
         </nav>
       </div>

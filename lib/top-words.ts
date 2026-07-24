@@ -5,9 +5,9 @@ import type { WordWithViews } from '@/lib/types'
 export function getFallbackTopWords(limit = 10): WordWithViews[] {
   const randomWords = getRandomWords(limit)
 
-  return randomWords.map((word, index) => ({
+  return randomWords.map((word) => ({
     ...word,
-    views: Math.floor(Math.random() * 500) + (limit - index) * 50,
+    views: 0,
   }))
 }
 

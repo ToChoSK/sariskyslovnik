@@ -6,7 +6,7 @@ import { Footer } from '@/components/footer'
 import { SearchBox } from '@/components/search-box'
 import { ViewCounter } from '@/components/view-counter'
 import { getWordByUrl, getSimilarWords } from '@/lib/dictionary'
-import { ArrowLeft, Volume2, Share2, Copy, Check, BookOpen } from 'lucide-react'
+import { ArrowLeft, BookOpen, Info, MapPin } from 'lucide-react'
 
 // Force dynamic rendering - no SSG
 export const dynamic = 'force-dynamic'
@@ -21,13 +21,28 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!word) {
     return {
-      title: 'Slovo nenájdené | Šarišský Slovník',
+      title: 'Slovo nenájdené',
+      robots: {
+        index: false,
+        follow: false,
+      },
     }
   }
 
   return {
-    title: `${word.slovenske} po šarišsky | Šarišský Slovník`,
+    title: `${word.slovenske} po šarišsky`,
     description: `${word.slovenske} v šarištine: ${word.sariske.join(', ')}. Objavte preklad a význam tohto slova v šarišskom nárečí.`,
+    alternates: {
+      canonical: `/slovo/${word.url}`,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+      },
+    },
     openGraph: {
       title: `${word.slovenske} = ${word.sariske[0]}`,
       description: `Preklad slovenského slova "${word.slovenske}" do šarištiny`,
@@ -126,6 +141,35 @@ export default async function WordPage({ params }: PageProps) {
                 </p>
                 <SearchBox />
               </div>
+
+              <aside className="mt-10 grid gap-4 sm:grid-cols-2" aria-label="Ako čítať záznam">
+                <div className="rounded-2xl border border-border bg-card p-5">
+                  <div className="flex items-center gap-2 font-bold text-foreground">
+                    <MapPin className="h-5 w-5 text-primary" aria-hidden="true" />
+                    Regionálny variant
+                  </div>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                    Rovnaké slovenské slovo môže mať v rôznych častiach Šariša odlišnú
+                    podobu. Uvedené tvary zachytávajú varianty v databáze.
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-border bg-card p-5">
+                  <div className="flex items-center gap-2 font-bold text-foreground">
+                    <Info className="h-5 w-5 text-accent" aria-hidden="true" />
+                    Orientačný záznam
+                  </div>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                    Heslo nie je normatívnym jazykovým odporúčaním. Kontext, výslovnosť
+                    a význam sa môžu meniť podľa obce aj konkrétneho použitia.
+                  </p>
+                  <Link
+                    href="/ako-pouzivat-slovnik"
+                    className="mt-3 inline-flex text-sm font-bold text-primary hover:underline"
+                  >
+                    Ako čítať slovník
+                  </Link>
+                </div>
+              </aside>
 
               {/* Similar Words */}
               {relatedWords.length > 0 && (

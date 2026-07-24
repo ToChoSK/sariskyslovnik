@@ -2,6 +2,14 @@ import { getDictionary } from '@/lib/dictionary'
 
 export const SITE_URL = 'https://www.slovniksaris.eu'
 export const WORDS_PER_SITEMAP = 10000
+const CONTENT_LAST_MODIFIED = '2026-07-24'
+const INDEXABLE_PAGES = [
+  { path: '', priority: '1', changefreq: 'weekly' },
+  { path: '/o-slovniku', priority: '0.8', changefreq: 'monthly' },
+  { path: '/sarisske-narecie', priority: '0.8', changefreq: 'monthly' },
+  { path: '/ako-pouzivat-slovnik', priority: '0.7', changefreq: 'monthly' },
+  { path: '/ochrana-sukromia', priority: '0.4', changefreq: 'yearly' },
+] as const
 
 export function getSitemapCount(): number {
   return Math.ceil(getDictionary().length / WORDS_PER_SITEMAP)
@@ -13,23 +21,24 @@ export function getSitemapWords(id: number) {
 }
 
 export function createUrlsetSitemap(): string {
-  const lastModified = new Date().toISOString()
-  const homeEntry = [
-    '<url>',
-    `<loc>${escapeXml(SITE_URL)}</loc>`,
-    `<lastmod>${lastModified}</lastmod>`,
-    '<changefreq>weekly</changefreq>',
-    '<priority>1</priority>',
-    '</url>',
-  ].join('')
+  const editorialEntries = INDEXABLE_PAGES.map((page) => {
+    return [
+      '<url>',
+      `<loc>${escapeXml(`${SITE_URL}${page.path}`)}</loc>`,
+      `<lastmod>${CONTENT_LAST_MODIFIED}</lastmod>`,
+      `<changefreq>${page.changefreq}</changefreq>`,
+      `<priority>${page.priority}</priority>`,
+      '</url>',
+    ].join('')
+  }).join('')
 
   const wordEntries = getDictionary().map((entry) => {
     return [
       '<url>',
       `<loc>${escapeXml(`${SITE_URL}/slovo/${entry.url}`)}</loc>`,
-      `<lastmod>${lastModified}</lastmod>`,
+      `<lastmod>${CONTENT_LAST_MODIFIED}</lastmod>`,
       '<changefreq>monthly</changefreq>',
-      '<priority>0.8</priority>',
+      '<priority>0.7</priority>',
       '</url>',
     ].join('')
   }).join('')
@@ -37,7 +46,7 @@ export function createUrlsetSitemap(): string {
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-    homeEntry,
+    editorialEntries,
     wordEntries,
     '</urlset>',
   ].join('')

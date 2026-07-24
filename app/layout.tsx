@@ -12,13 +12,21 @@ const nunito = Nunito({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.slovniksaris.eu'),
-  title: 'Šarišský Slovník - Preklad slovenčiny do šarištiny',
-  description: 'Najväčší online slovník slovensko-šarišského nárečia. Preložte slovenské slová do šarištiny a objavte krásu východoslovenského dialektu.',
+  title: {
+    default: 'Šarišský slovník – slovenské a šarišské slová',
+    template: '%s | Šarišský slovník',
+  },
+  description: 'Vyhľadávajte slovenské heslá a ich šarišské podoby. Spoznajte regionálne varianty, spôsob používania slovníka a osobitosti šarišských nárečí.',
   keywords: ['šariš', 'šariština', 'slovník', 'nárečie', 'slovenčina', 'východné slovensko', 'dialekt'],
-  generator: 'v0.app',
+  alternates: {
+    canonical: '/',
+  },
+  other: {
+    'google-adsense-account': 'ca-pub-7058805435322327',
+  },
   openGraph: {
-    title: 'Šarišský Slovník',
-    description: 'Preložte slovenské slová do šarištiny',
+    title: 'Šarišský slovník',
+    description: 'Slovenské heslá, šarišské podoby a sprievodca šarišskými nárečiami.',
     type: 'website',
     locale: 'sk_SK',
     images: [
@@ -56,13 +64,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="sk">
-      <head>
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7058805435322327"
-          crossOrigin="anonymous"
-        />
-      </head>
       <body className={`${nunito.variable} font-sans antialiased min-h-screen`}>
         <CloudflarePageTracker />
         {children}
